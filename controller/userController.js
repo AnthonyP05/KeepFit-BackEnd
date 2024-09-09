@@ -1,4 +1,5 @@
 // Contains the business logic of each route
+// Basically creating methods to handle information, create, read, update, delete
 
 const User = require("../models/userModel");
 
@@ -26,3 +27,28 @@ exports.createUser = async (req, res) => {
     }
     res.json({ message: 'User created', data: userData });
 };
+
+exports.updateUser = async (req, res) => {
+    const { id } = req.params;
+    const updates = req.body;
+
+    try {
+        const updatedUser = await User.findByIdAndUpdate(id, updates, { new: true });
+        if (!updatedUser) return res.status(404).json({ message: `User not found. `});
+        res.json(updatedUser);
+    } catch (err)  {
+        res.status(400).json({ message: err.message });
+    }
+}
+
+exports.deleteUser = async (req, res) => {
+    const { id } = req.params;
+    
+    try {
+        const deletedUser = await User.findByIdAndDelete(id);
+        if (!deletedUser) return res.status(404).json({ message: `User not found. `});
+        return res.json(deletedUser);
+    } catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+}
