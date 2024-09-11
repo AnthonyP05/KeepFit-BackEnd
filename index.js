@@ -12,8 +12,8 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 
 // Routes
-const indexRoutes = require("./routes/index");
-app.use('/', indexRoutes);
+const userRoutes = require("./routes/users");
+app.use('/api/users', userRoutes)
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
