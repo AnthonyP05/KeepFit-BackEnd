@@ -4,7 +4,11 @@ const User = require("../models/userModel");
 
 // Authentication: Verifies the JWT token to ensure the user is authenticated.
 const authMiddleware = (req, res, next) => {
-    const token = req.header('Authorization');
+    const header = req.header('Authorization');
+
+    if (!header) return res.status(401).json({ message: "Access Denied "});
+
+    const token = header.split(' ')[1];
 
     if (!token) return res.status(401).json({ message: "Access Denied" });
 
@@ -25,8 +29,8 @@ const authorizeRoles = (...allowedRoles) => {
         try {
             const user = await User.findById(req.user.id);
             if (!user) return res.status(404).json({ message: 'User not found' });
-
-            if (!allowedRoles.includes(user.role)) {
+            
+            if (!allowedRoles.includes(user.roles)) {
                 return res.status(403).json({ message: 'Permission Denied' });
             }
             next();
@@ -50,7 +54,7 @@ const authLogin = async (req, res) => {
       if (!isMatch) return res.status(401).json({ message: 'Invalid email or password p' });
   
       // Generate JWT token
-      const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_KEY, {
+      const token = jwt.sign({ id: user._id, role: user.roles[0] }, process.env.JWT_SECRET, {
         expiresIn: '1h', // Token expires in 1 hour
       });
   
