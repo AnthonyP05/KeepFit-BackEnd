@@ -11,9 +11,7 @@ const PORT = process.env.PORT || 3000;
 
 // Use cors middleware to allow local cross origin 
 // (Can be removed for production)
-app.use(cors({
-    origin: 'http://localhost:8081'
-}));
+app.use(cors());
 
 // Middleware
 app.use(express.json());
