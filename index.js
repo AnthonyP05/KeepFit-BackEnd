@@ -1,12 +1,19 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
+const cors = require('cors');
 
 dotenv.config();
 connectDB();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Use cors middleware to allow local cross origin 
+// (Can be removed for production)
+app.use(cors({
+    origin: 'http://localhost:8081'
+}));
 
 // Middleware
 app.use(express.json());
